@@ -24,4 +24,12 @@ jobs:
         run: |
           source venv/bin/activate
           pytest
+          - name: Send Telegram notification on failure
+          if: failure()
+          run: |
+            curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d text="❌ Tests failed in ${{ github.repository }} on ${{ github.ref }}"
+        
+      
 
